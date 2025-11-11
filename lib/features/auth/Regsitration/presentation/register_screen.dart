@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:blog_app/common_widgets/custom_button.dart';
 import 'package:blog_app/common_widgets/custom_textform.dart';
 import 'package:blog_app/constants/app_constants.dart';
 import 'package:blog_app/features/auth/Login/presentation/login_screen.dart';
+import 'package:blog_app/features/auth/Regsitration/data/api_register.dart';
 import 'package:blog_app/features/home/presentation/home_screen.dart';
+import 'package:blog_app/features/home/presentation/navigation_home.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,11 +17,13 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final store = GetStorage();
+    ApiRegister apiRegister = ApiRegister();
     final formkey = GlobalKey<FormState>();
     TextEditingController username = TextEditingController();
     TextEditingController email = TextEditingController();
     TextEditingController password = TextEditingController();
-    TextEditingController confirmPassword = TextEditingController();
+    TextEditingController phone = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +51,7 @@ class RegisterScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Username",
+                    "Name",
                     style: TextStyle(fontSize: 16.sp, color: Colors.white),
                   ),
                   SizedBox(height: 5.h),
@@ -77,13 +84,13 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 20.h),
                   Text(
-                    "Confirm Password",
+                    "Phone",
                     style: TextStyle(fontSize: 16.sp, color: Colors.white),
                   ),
                   SizedBox(height: 5.h),
                   CustomTextform(
-                    controller: confirmPassword,
-                    hintext: "Confirm password",
+                    controller: phone,
+                    hintext: "phone",
                     validateText: "Enter your password again",
                   ),
                   SizedBox(height: 20.h),
@@ -92,12 +99,50 @@ class RegisterScreen extends StatelessWidget {
             ),
             SizedBox(height: 20.h),
             InkWell(
-              onTap: () {
+              onTap: () async {
                 if (formkey.currentState!.validate()) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        "Creating Account Pleas wait.",
+                        style: GoogleFonts.inter(color: Colors.white),
+                      ),
+                      backgroundColor: buttonColor,
+                    ),
                   );
+                  await apiRegister.registerAcc(
+                    name: username.text,
+                    email: email.text,
+                    password: password.text,
+                    phone: phone.text,
+                  );
+                  String? token = store.read("token");
+                  if (token != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Register Success",
+                          style: GoogleFonts.inter(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => NavigationHome()),
+                      (Route<dynamic> route) => false,
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Registration Faild. \n Try Again or Check you Details Again!.",
+                          style: GoogleFonts.inter(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 }
               },
               child: CustomButton(text: "Register"),

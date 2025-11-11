@@ -1,5 +1,6 @@
 import 'package:blog_app/features/blog%20details/presentation/blog_screen.dart';
 import 'package:blog_app/features/home/data/api_data_home.dart';
+import 'package:blog_app/features/search/data/presentation/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,18 +23,24 @@ class HomeScreen extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
-          InkWell(child: Icon(Icons.search, color: Colors.white)),
+          InkWell(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SearchScreen()),
+            ),
+            child: Icon(Icons.search, color: Colors.white),
+          ),
           SizedBox(width: 10.w),
         ],
       ),
       body: FutureBuilder(
-        future: api.apidata(),
+        future: api.dataFetcher(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else {
             return ListView.builder(
-              itemCount: snapshot.data!.length,
+              itemCount: snapshot.data!.data.posts.length,
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
@@ -59,13 +66,17 @@ class HomeScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    snapshot.data![index].id.toString(),
+                                    snapshot
+                                        .data!
+                                        .data
+                                        .posts[index]
+                                        .categories[0],
                                     style: GoogleFonts.inter(
                                       color: Colors.white54,
                                     ),
                                   ),
                                   Text(
-                                    snapshot.data![index].title,
+                                    snapshot.data!.data.posts[index].title,
                                     maxLines: 2,
                                     style: GoogleFonts.inter(
                                       color: Colors.white,
@@ -73,7 +84,7 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    snapshot.data![index].body,
+                                    snapshot.data!.data.posts[index].excerpt,
                                     maxLines: 3,
                                     style: GoogleFonts.inter(
                                       color: Colors.white54,

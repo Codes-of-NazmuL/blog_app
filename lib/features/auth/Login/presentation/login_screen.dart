@@ -1,10 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:blog_app/common_widgets/custom_button.dart';
 import 'package:blog_app/common_widgets/custom_textform.dart';
 import 'package:blog_app/constants/app_constants.dart';
+import 'package:blog_app/features/auth/Login/data/api_login.dart';
 import 'package:blog_app/features/auth/Regsitration/presentation/register_screen.dart';
 import 'package:blog_app/features/home/presentation/navigation_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -12,6 +16,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final store = GetStorage();
+    ApiLogin apiLogin = ApiLogin();
     final formkey = GlobalKey<FormState>();
     TextEditingController email = TextEditingController();
     TextEditingController password = TextEditingController();
@@ -50,7 +56,7 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   CustomTextform(
                     controller: email,
-                    hintext: "Email or username",
+                    hintext: "Email",
                     validateText: "Enter your email ",
                   ),
                   SizedBox(height: 20.h),
@@ -64,15 +70,52 @@ class LoginScreen extends StatelessWidget {
             ),
             SizedBox(height: 20.h),
             InkWell(
-              onTap: () {
+              onTap: () async {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Logging In pleas wait...",
+                      style: GoogleFonts.inter(color: Colors.white),
+                    ),
+                    backgroundColor: buttonColor,
+                  ),
+                );
                 if (formkey.currentState!.validate()) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => NavigationHome()),
+                  await apiLogin.loginAcc(
+                    email: email.text,
+                    password: password.text,
                   );
+                  String? token = store.read("token");
+                  if (token != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Login Success",
+                          style: GoogleFonts.inter(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    Navigator.pushAndRemoveUntil(
+                     
+                      context,
+                      MaterialPageRoute(builder: (context) => NavigationHome()),
+                      (Route<dynamic> route) => false,
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Login Faild.\n Try Again.",
+                          style: GoogleFonts.inter(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 }
               },
-              child: CustomButton(text: "Sign Up "),
+              child: CustomButton(text: "Sign in "),
             ),
             Spacer(),
             Text(

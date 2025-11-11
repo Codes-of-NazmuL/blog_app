@@ -1,7 +1,10 @@
+import 'package:blog_app/constants/app_constants.dart';
 import 'package:blog_app/features/bookmarks/presentation/bookmarks_screen.dart';
 import 'package:blog_app/features/home/presentation/home_screen.dart';
-import 'package:blog_app/profile/presentation/profile_screen.dart';
+import 'package:blog_app/features/profile/presentation/profile_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NavigationHome extends StatefulWidget {
   const NavigationHome({super.key});
@@ -22,23 +25,36 @@ class _NavigationHomeState extends State<NavigationHome> {
     ];
     return Scaffold(
       body: ScreenList[currentindex],
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xff1C1F26),
-        unselectedItemColor: Colors.white60,
-        currentIndex: currentindex,
-        onTap: (value) {
-          setState(() {
-            currentindex = value;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark_outlined),
-            label: "Bookmarks",
+      bottomNavigationBar: SizedBox(
+        height: 90.h,
+        child: ClipRRect(
+          borderRadius: BorderRadiusGeometry.circular(10),
+          child: BottomNavigationBar(
+            backgroundColor: Color(0xff1C1F26),
+            unselectedItemColor: Colors.white60,
+            currentIndex: currentindex,
+            selectedItemColor: buttonColor,
+            onTap: (value) {
+              setState(() {
+                currentindex = value;
+              });
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.house),
+                label: "Home",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.bookmark),
+                label: "Bookmarks",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.person),
+                label: "profile",
+              ),
+            ],
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.man_2), label: "profile"),
-        ],
+        ),
       ),
     );
   }
