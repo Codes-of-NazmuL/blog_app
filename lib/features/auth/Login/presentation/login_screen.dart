@@ -71,47 +71,50 @@ class LoginScreen extends StatelessWidget {
             SizedBox(height: 20.h),
             InkWell(
               onTap: () async {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      "Logging In pleas wait...",
-                      style: GoogleFonts.inter(color: Colors.white),
-                    ),
-                    backgroundColor: buttonColor,
-                  ),
-                );
                 if (formkey.currentState!.validate()) {
-                  await apiLogin.loginAcc(
-                    email: email.text,
-                    password: password.text,
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        "Logging In pleas wait...",
+                        style: GoogleFonts.inter(color: Colors.white),
+                      ),
+                      backgroundColor: buttonColor,
+                    ),
                   );
-                  String? token = store.read("token");
-                  if (token != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Login Success",
-                          style: GoogleFonts.inter(color: Colors.white),
+                  if (formkey.currentState!.validate()) {
+                    await apiLogin.loginAcc(
+                      email: email.text,
+                      password: password.text,
+                    );
+                    String? token = store.read("token");
+                    if (token != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "Login Success",
+                            style: GoogleFonts.inter(color: Colors.white),
+                          ),
+                          backgroundColor: Colors.green,
                         ),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                    Navigator.pushAndRemoveUntil(
-                     
-                      context,
-                      MaterialPageRoute(builder: (context) => NavigationHome()),
-                      (Route<dynamic> route) => false,
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Login Faild.\n Try Again.",
-                          style: GoogleFonts.inter(color: Colors.white),
+                      );
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NavigationHome(),
                         ),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
+                        (Route<dynamic> route) => false,
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "Login Faild.\n Try Again.",
+                            style: GoogleFonts.inter(color: Colors.white),
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   }
                 }
               },

@@ -178,6 +178,7 @@ class BlogScreen extends StatelessWidget {
                   SizedBox(height: 10.h),
                   ListView.builder(
                     shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: 4,
                     itemBuilder: (context, index) {
                       return SizedBox(

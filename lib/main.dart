@@ -25,7 +25,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = GetStorage();
-    String? token = store.read('token');
+    String? token = store.read("token");
+    final provider = context.read<BookmarkProvider>();
+    provider.readbookmark();
     return ScreenUtilInit(
       designSize: Size(390, 844),
       builder: (context, child) => MaterialApp(
