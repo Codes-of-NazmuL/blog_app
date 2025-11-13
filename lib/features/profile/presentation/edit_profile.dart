@@ -18,7 +18,6 @@ class EditProfile extends StatelessWidget {
     required this.name,
     required this.phone,
     required this.Id,
-
   });
 
   @override
@@ -49,92 +48,94 @@ class EditProfile extends StatelessWidget {
 
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 30.h),
-            Center(
-              child: CircleAvatar(
-                radius: 64,
-                child: ClipRRect(
-                  borderRadius: BorderRadiusGeometry.circular(100),
-                  child: Image.network(
-                    "https://avatar.iran.liara.run/public/${Id % 5 + 1}",
-                    fit: BoxFit.cover,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 30.h),
+              Center(
+                child: CircleAvatar(
+                  radius: 64,
+                  child: ClipRRect(
+                    borderRadius: BorderRadiusGeometry.circular(100),
+                    child: Image.network(
+                      "https://avatar.iran.liara.run/public/${Id % 5 + 1}",
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 50.h),
-            Text(
-              "Name",
-              style: TextStyle(fontSize: 16.sp, color: Colors.white),
-            ),
-            SizedBox(height: 5.h),
-            CustomTextform(
-              validateText: "Enter your userName",
-              controller: namecontroller,
-              hintext: "Enter your username",
-            ),
+              SizedBox(height: 50.h),
+              Text(
+                "Name",
+                style: TextStyle(fontSize: 16.sp, color: Colors.white),
+              ),
+              SizedBox(height: 5.h),
+              CustomTextform(
+                validateText: "Enter your userName",
+                controller: namecontroller,
+                hintext: "Enter your username",
+              ),
 
-            SizedBox(height: 20.h),
-            Text(
-              "Phone",
-              style: TextStyle(fontSize: 16.sp, color: Colors.white),
-            ),
-            SizedBox(height: 5.h),
-            CustomTextform(
-              validateText: "Enter your email",
-              controller: phonecontroller,
-              hintext: "Enter your email",
-            ),
-            Spacer(),
-            InkWell(
-              onTap: () async {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Updating Profile....',
-                      style: GoogleFonts.inter(color: Colors.white),
-                    ),
-                    backgroundColor: buttonColor,
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-                var data = await api.putProfile(
-                  name: namecontroller.text,
-                  phone: phonecontroller.text,
-                );
-                if (data == String) {
+              SizedBox(height: 20.h),
+              Text(
+                "Phone",
+                style: TextStyle(fontSize: 16.sp, color: Colors.white),
+              ),
+              SizedBox(height: 5.h),
+              CustomTextform(
+                validateText: "Enter your email",
+                controller: phonecontroller,
+                hintext: "Enter your email",
+              ),
+              SizedBox(height: 250.h),
+              InkWell(
+                onTap: () async {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        "Update profile Faild.\n Try Again.",
+                        'Updating Profile....',
                         style: GoogleFonts.inter(color: Colors.white),
                       ),
-                      backgroundColor: Colors.red,
+                      backgroundColor: buttonColor,
+                      duration: Duration(seconds: 2),
                     ),
                   );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        "Update profile Successfully!",
-                        style: GoogleFonts.inter(color: Colors.white),
+                  var data = await api.putProfile(
+                    name: namecontroller.text,
+                    phone: phonecontroller.text,
+                  );
+                  if (data == String) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Update profile Faild.\n Try Again.",
+                          style: GoogleFonts.inter(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.red,
                       ),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => NavigationHome()),
-                  );
-                }
-              },
-              child: CustomButton(text: "Save Changes"),
-            ),
-            SizedBox(height: 20.h),
-          ],
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Update profile Successfully!",
+                          style: GoogleFonts.inter(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => NavigationHome()),
+                    );
+                  }
+                },
+                child: CustomButton(text: "Save Changes"),
+              ),
+              SizedBox(height: 20.h),
+            ],
+          ),
         ),
       ),
     );

@@ -28,6 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
         backgroundColor: Colors.black,
         leading: InkWell(
           onTap: () {
+            
             Navigator.pop(context);
           },
           child: Icon(Icons.arrow_back, color: Colors.white),
@@ -42,8 +43,7 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             SizedBox(height: 30),
             Text(

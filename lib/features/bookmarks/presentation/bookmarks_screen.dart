@@ -57,7 +57,11 @@ class BookmarksScreen extends StatelessWidget {
                                       10,
                                     ),
                                     child: Image.network(
-                                      "https://picsum.photos/600/400?random=${bookmark.bookmarkse[index]}",
+                                      snapshot
+                                          .data!
+                                          .data
+                                          .posts[bookmark.bookmarkse[index]]
+                                          .featuredImage,
                                       fit: BoxFit.fill,
                                     ),
                                   ),

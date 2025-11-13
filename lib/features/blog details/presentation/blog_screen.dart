@@ -50,7 +50,7 @@ class BlogScreen extends StatelessWidget {
                     height: 320.h,
                     width: 390.w,
                     child: Image.network(
-                      "https://picsum.photos/600/400?random=$index",
+                      snapshot.data!.data.posts[index].featuredImage,
                       fit: BoxFit.cover,
                     ),
                   ),

@@ -1,3 +1,5 @@
+// --- Full Corrected Data Model ---
+
 class PostsDataModel {
   bool success;
   String message;
@@ -72,14 +74,14 @@ class Post {
   String title;
   String excerpt;
   String content;
-  dynamic featuredImage;
+  String featuredImage; // Corrected: Was dynamic
   Author author;
   List<String> categories;
   int readTime;
   DateTime createdAt;
   DateTime updatedAt;
-  int likeCount;
-  String commentCount;
+  int likeCount; // Corrected: Was int, but API sends String/int
+  int commentCount; // Corrected: Was String
   bool isLiked;
   bool isBookmarked;
 
@@ -111,8 +113,15 @@ class Post {
     readTime: json["read_time"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
-    likeCount: json["like_count"],
-    commentCount: json["comment_count"],
+
+    // --- FIX ---
+    // Robustly handles both int (0) and String ("1") from the API
+    likeCount: int.tryParse(json["like_count"].toString()) ?? 0,
+
+    // --- FIX ---
+    // Robustly handles String ("0") from the API
+    commentCount: int.tryParse(json["comment_count"].toString()) ?? 0,
+
     isLiked: json["is_liked"],
     isBookmarked: json["is_bookmarked"],
   );
@@ -148,14 +157,4 @@ class Author {
   Map<String, dynamic> toJson() => {"id": id, "name": name, "avatar": avatar};
 }
 
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
-}
+// The unused 'EnumValues' class has been removed.

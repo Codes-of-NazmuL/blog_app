@@ -1,6 +1,6 @@
 import 'package:blog_app/features/blog%20details/presentation/blog_screen.dart';
 import 'package:blog_app/features/home/data/api_data_home.dart';
-import 'package:blog_app/features/search/data/presentation/search_screen.dart';
+import 'package:blog_app/features/search/presentation/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -106,7 +106,12 @@ class HomeScreen extends StatelessWidget {
                                       10,
                                     ),
                                     child: Image.network(
-                                      "https://picsum.photos/600/400?random=$index",
+                                      // "https://picsum.photos/600/400?random=$index",
+                                      snapshot
+                                          .data!
+                                          .data
+                                          .posts[index]
+                                          .featuredImage,
                                       fit: BoxFit.fill,
                                     ),
                                   ),
